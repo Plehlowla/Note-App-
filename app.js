@@ -39,9 +39,58 @@ const createNoteView = (note) => {
     noteDiv.append(editBtn);
     noteDiv.append(deleteBtn);
 
+    editBtn.onclick = () => editNote(noteDiv);
     deleteBtn.onclick = () => deleteNote(noteDiv);
 
     return noteDiv;
+}
+
+const cancelEdit = (noteDiv) => {
+    const titleP = noteDiv.querySelector('b.title');
+    titleP.contentEditable = false;
+    const bodyP = noteDiv.querySelector('p.body');
+    bodyP.contentEditable = false;
+
+    const editBtn = noteDiv.querySelector('button.edit');
+    editBtn.innerHTML = 'Edit Note';
+    const deleteBtn = noteDiv.querySelector('button.delete');
+    deleteBtn.innerHTML = 'Delete Note';
+
+    const note = notes.find(note => note.id == noteDiv.id);
+    titleP.innerHTML = note.title;
+    bodyP.innerHTML = note.body;
+    editBtn.onclick = () => editNote(noteDiv);
+    deleteBtn.onclick = () => deleteNote(noteDiv);
+}
+
+const editNote = (noteDiv, editSave = false) => {
+    const titleP = noteDiv.querySelector('b.title');
+    titleP.contentEditable = true;
+    titleP.focus();
+    const bodyP = noteDiv.querySelector('p.body');
+    bodyP.contentEditable = true;
+
+    const editBtn = document.querySelector('button.edit');
+    editBtn.innerHTML = 'Save Note';
+    const deleteBtn = noteDiv.querySelector('button.edit');
+    deleteBtn.innerHTML = 'Cancel Edit';
+    deleteBtn.onclick = () => cancelEdit(noteDiv);
+    editBtn.onclick = () => editNote(noteDiv, true);
+
+    if (editSave) {
+        const note = notes.find(note => note.id == noteDiv.id);
+        note.title = titleP.innerText.trim();
+        note.body = bodyP.innerText.trim();
+
+        deleteBtn.innerHTML = 'Delete Note';
+        editBtn.innerHTML = 'Edit Note';
+
+        titleP.contentEditable = false;
+        bodyP.contentEditable = false;
+
+        editBtn.onclick = () => editNote(noteDiv);
+        deleteBtn.onclick = () => deleteNote(noteDiv);
+    }
 }
 
 const saveNote = ()=> {
