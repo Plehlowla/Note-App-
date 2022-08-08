@@ -39,6 +39,8 @@ const createNoteView = (note) => {
     noteDiv.append(editBtn);
     noteDiv.append(deleteBtn);
 
+    deleteBtn.onclick = () => deleteNote(noteDiv);
+
     return noteDiv;
 }
 
@@ -55,6 +57,11 @@ const saveNote = ()=> {
     titleInput.value = '';
     bodyInput.value = '';
     bgColorInput.value = 'Select Color';
+}
+
+const deleteNote = (noteDiv) => {
+    noteDiv.remove();
+    notes = notes.filter(note => note.id != noteDiv.id);
 }
 
 document.querySelector('button.add').onclick = () => saveNote();
